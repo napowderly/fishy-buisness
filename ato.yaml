@@ -4,3 +4,4 @@ builds:
     entry: elec/src/fishy-buisness.ato:FishyBuisness
 dependencies:
 - generics
+- rp2040
