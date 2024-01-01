@@ -1,14 +1,14 @@
-import LED from "generics/leds.ato";
-component KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF from LED:
+# import LED from "generics/leds.ato";
+component KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF: # from LED:
     # component KW H3L531.TE-Z7Q6-EBVFFCBB46-DFYF
     footprint = "LED-SMD_6P-L4.2-W3.8_KWH3L531.TE-Z7Q"
     lcsc_id = "C2830579"
     mpn = "C2830579"
     # pins
-    anode ~ pin 6
+    signal anode ~ pin 6
     anode ~ pin 5
     anode ~ pin 4
-    cathode ~ pin 1
+    signal cathode ~ pin 1
     cathode ~ pin 2
     cathode ~ pin 3
 
