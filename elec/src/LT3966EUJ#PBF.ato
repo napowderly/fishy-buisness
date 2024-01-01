@@ -1,0 +1,48 @@
+component LT3966EUJ_PBF:
+    # component LT3966EUJ#PBF
+    footprint = "QFN-40_L6.0-W6.0-P0.50-BL-EP4.5"
+    lcsc_id = "C1020309"
+    mpn = "C1020309"
+    # pins
+    signal GND ~ pin 41
+    signal ISN1 ~ pin 40
+    signal FB1 ~ pin 39
+    signal VIN ~ pin 38
+    signal INTVCC ~ pin 37
+    signal EN_UVLO ~ pin 36
+    signal EXT2 ~ pin 35
+    signal SYNC ~ pin 34
+    signal RT ~ pin 33
+    signal FB2 ~ pin 32
+    signal ISN2 ~ pin 31
+    signal ISP2 ~ pin 30
+    signal TG2 ~ pin 29
+    signal SW2 ~ pin 28
+    SW2 ~ pin 27
+    signal SW4 ~ pin 26
+    SW4 ~ pin 25
+    signal TG4 ~ pin 24
+    signal ISP4 ~ pin 23
+    signal ISN4 ~ pin 22
+    signal FB4 ~ pin 21
+    signal ALERT_ ~ pin 20
+    signal SCL ~ pin 19
+    signal SDA ~ pin 18
+    signal ADR2 ~ pin 17
+    signal ADR1 ~ pin 16
+    signal EXT1 ~ pin 15
+    signal CTRL_PWM4 ~ pin 14
+    signal CTRL_PWM3 ~ pin 13
+    signal CTRL_PWM2 ~ pin 12
+    signal CTRL_PWM1 ~ pin 11
+    signal FB3 ~ pin 10
+    signal ISN3 ~ pin 9
+    signal ISP3 ~ pin 8
+    signal TG3 ~ pin 7
+    signal SW3 ~ pin 6
+    SW3 ~ pin 5
+    signal SW1 ~ pin 4
+    SW1 ~ pin 3
+    signal TG1 ~ pin 2
+    signal ISP1 ~ pin 1
+

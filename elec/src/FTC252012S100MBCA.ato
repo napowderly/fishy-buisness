@@ -1,0 +1,11 @@
+import Inductor from "generics/inductors.ato"
+component FTC252012S100MBCA from Inductor: 
+    # component FTC252012S100MBCA
+    footprint = "IND-SMD_L2.5-W2.0"
+    lcsc_id = "C5832376"
+    mpn = "C5832376"
+    # pins
+    p2 ~ pin 2
+    p1 ~ pin 1
+    value = "10uH"
+
