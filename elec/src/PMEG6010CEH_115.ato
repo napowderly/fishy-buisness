@@ -1,0 +1,9 @@
+component PMEG6010CEH_115:
+    # component PMEG6010CEH,115
+    footprint = "SOD-123FL_L2.7-W1.8-LS3.8-RD"
+    lcsc_id = "C110797"
+    mpn = "C110797"
+    # pins
+    signal C ~ pin 1
+    signal A ~ pin 2
+

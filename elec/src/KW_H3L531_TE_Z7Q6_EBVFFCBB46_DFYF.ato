@@ -1,0 +1,13 @@
+component KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF:
+    # component KW H3L531.TE-Z7Q6-EBVFFCBB46-DFYF
+    footprint = "LED-SMD_6P-L4.2-W3.8_KWH3L531.TE-Z7Q"
+    lcsc_id = "C2830579"
+    mpn = "C2830579"
+    # pins
+    signal ANODE ~ pin 6
+    signal ANODE ~ pin 5
+    signal ANODE ~ pin 4
+    signal CATHODE ~ pin 1
+    signal CATHODE ~ pin 2
+    signal CATHODE ~ pin 3
+

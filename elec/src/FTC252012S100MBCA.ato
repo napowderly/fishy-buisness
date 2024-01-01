@@ -4,8 +4,8 @@ component FTC252012S100MBCA from Inductor:
     footprint = "IND-SMD_L2.5-W2.0"
     lcsc_id = "C5832376"
     mpn = "C5832376"
+    value = "10uH"
     # pins
     p2 ~ pin 2
     p1 ~ pin 1
-    value = "10uH"
 
