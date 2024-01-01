@@ -1,5 +1,5 @@
 import Resistor from "generics/resistors.ato"
-component RS_06FL7__0R56 from Rresistor:
+component RS_06FL7__0R56 from Resistor:
     # component RS-06FL7--0R56
     footprint = "R1206"
     lcsc_id = "C408948"
