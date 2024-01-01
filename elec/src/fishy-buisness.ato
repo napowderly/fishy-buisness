@@ -195,11 +195,11 @@ module LEDChannelUV from LEDChannelBuckBoost:
     whiteled3 = new KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF
     whiteled4 = new KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF
      
-    whiteled1.ANODE ~ led_interface.anode
-    whiteled1.CATHODE ~ whiteled2.ANODE
-    whiteled2.CATHODE ~ whiteled3.ANODE
-    whiteled3.CATHODE ~ whiteled4.ANODE
-    whiteled4.CATHODE ~ led_interface.cathode
+    whiteled1.anode ~ led_interface.anode
+    whiteled1.cathode ~ whiteled2.anode
+    whiteled2.cathode ~ whiteled3.anode
+    whiteled3.cathode ~ whiteled4.anode
+    whiteled4.cathode ~ led_interface.cathode
     
 
     # #hacky bits: TODO remove this

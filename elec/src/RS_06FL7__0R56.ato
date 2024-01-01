@@ -1,9 +1,10 @@
-component RS_06FL7__0R56:
+import Resistor from "generics/resistors.ato"
+component RS_06FL7__0R56 from Rresistor:
     # component RS-06FL7--0R56
     footprint = "R1206"
     lcsc_id = "C408948"
     mpn = "C408948"
     # pins
-    signal _1 ~ pin 1
-    signal _2 ~ pin 2
+    signal p1 ~ pin 1
+    signal p2 ~ pin 2
 
