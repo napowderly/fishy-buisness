@@ -4,6 +4,7 @@ component KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF: # from LED:
     footprint = "LED-SMD_6P-L4.2-W3.8_KWH3L531.TE-Z7Q"
     lcsc_id = "C2830579"
     mpn = "C2830579"
+    designator_prefix = "LED"
     # pins
     signal anode ~ pin 6
     anode ~ pin 5

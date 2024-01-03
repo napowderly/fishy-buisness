@@ -150,11 +150,10 @@ module LT3966Kit:
     # power.vcc   ~ channel4_interface.vcc
     # power.gnd   ~ channel4_interface.gnd
 
-    # Enable VDIV
+    # Enable VDIV - 
     en_vdiv = new VDiv
-    en_vdiv.in ~ power.vcc
+    en_vdiv.in ~ power
     en_vdiv.out ~ ic.EN_UVLO
-    en_vdiv.bottom ~ power.gnd
 
     en_vdiv.r_top.value = "499k"
     en_vdiv.r_bottom.value = "84.5k"
