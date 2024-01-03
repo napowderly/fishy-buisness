@@ -24,12 +24,14 @@ import LDOReg3V3                from "regulators/regulators.ato"
 import BoostReg5V               from "regulators/regulators.ato"
 
 # my shady components
-import FTC252012S100MBCA        from "FTC252012S100MBCA.ato"
+import FTC252012S100MBCA       from "FTC252012S100MBCA.ato"
 
 import KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF from "KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF.ato"
-import RS_06FL7__0R56           from "RS_06FL7__0R56.ato"
+import RS_06FL7__0R56          from "RS_06FL7__0R56.ato"
 import PMEG6010CEH_115         from "PMEG6010CEH_115.ato"
 
+import LT3966Kit               from "LT3966.ato"
+import LEDChannelUV            from "LT3966.ato"
 
 # module LT3966Boost:
 #     led_driver = new LT3966Kit
@@ -62,14 +64,30 @@ import PMEG6010CEH_115         from "PMEG6010CEH_115.ato"
 #     led3 = new WS2812B
 
 module FishyBuisness:
+    power_batt = new Power
 
     power_5v = new Power
-    power_3v3 = new Power
-    power_batt = new Power
-    # signal gnd
-    micro = new RP2040Kit
+    buck_5v = new BuckReg5V
+    buck_5v.in ~ power_batt
+    buck_5v.out ~ power_5v
 
+    power_3v3 = new Power
+    ldo_3v3 = new LDOReg3V3
+    ldo_3v3.in ~ power_power_5v
+    ldo_3v3.out ~ power_3v3
+    # signal gnd
+    
     usbc = new USBCConn
+    # really need to figure out USB-C PD
+
+
+    micro = new RP2040Kit
+    status_led = new WS2812B
+    status_led.data ~ micro.gpio0
+    status_led.power ~ power_5v
+
+
+    usbc.usb2 ~ micro.usb_if
 
     led_driver = new LT3966Kit
     led1 = new LEDChannelUV
@@ -82,253 +100,5 @@ module FishyBuisness:
     # led_driver.channel3_interface ~ led3.channel_interface
     # led_driver.channel4_interface ~ led4.channel_interface
 
-interface LEDInterface:
-    signal anode
-    signal cathode
-
-module LT3966Kit:
-    power = new Power
-    i2c = new I2C
-    ic = new _LT3966EUJPBF
-
-    # power input
-
-
-    # i2c connections
-    ic.SCL ~ i2c.scl
-    ic.SDA ~ i2c.sda
-
-    # ic.ADR2 ~ ic.INTVCC
-    # ic.ADR1 ~ ic.INTVCC
-    #TODO: dont let me die underwater in the dark
-    # if uC out to lunch system should turn on white LED low power long run state 
-
-
-
-    # 4 channel led driver
-
-    # LED channel interfaces
-    channel1_interface = new LEDChannelInterface
-    # channel2_interface = new LEDChannelInterface
-    # channel3_interface = new LEDChannelInterface
-    # channel4_interface = new LEDChannelInterface
-
-    # connections to IC
-    # channel 1
-    ic.SW1      ~ channel1_interface.switching_node
-    ic.FB1      ~ channel1_interface.feedback
-    ic.ISP1     ~ channel1_interface.current_sense_p
-    ic.ISN1     ~ channel1_interface.current_sense_n
-    ic.TG1      ~ channel1_interface.mosfet_gate
-    power.vcc   ~ channel1_interface.vcc
-    power.gnd   ~ channel1_interface.gnd
-
-    # # channel 2 
-    # ic.SW2      ~ channel2_interface.switching_node
-    # ic.FB2      ~ channel2_interface.feedback
-    # ic.ISP2     ~ channel2_interface.current_sense_p
-    # ic.ISN2     ~ channel2_interface.current_sense_n
-    # ic.TG2      ~ channel2_interface.mosfet_gate
-    # power.vcc   ~ channel2_interface.vcc
-    # power.gnd   ~ channel2_interface.gnd
-
-    # # channel 3
-    # ic.SW3      ~ channel3_interface.switching_node
-    # ic.FB3      ~ channel3_interface.feedback
-    # ic.ISP3     ~ channel3_interface.current_sense_p
-    # ic.ISN3     ~ channel3_interface.current_sense_n
-    # ic.TG3      ~ channel3_interface.mosfet_gate
-    # power.vcc   ~ channel3_interface.vcc
-    # power.gnd   ~ channel3_interface.gnd
-    
-    # # channel 4
-    # ic.SW4      ~ channel4_interface.switching_node
-    # ic.FB4      ~ channel4_interface.feedback
-    # ic.ISP4     ~ channel4_interface.current_sense_p
-    # ic.ISN4     ~ channel4_interface.current_sense_n
-    # ic.TG4      ~ channel4_interface.mosfet_gate
-    # power.vcc   ~ channel4_interface.vcc
-    # power.gnd   ~ channel4_interface.gnd
-
-    # Enable VDIV - 
-    en_vdiv = new VDiv
-    en_vdiv.in ~ power
-    en_vdiv.out ~ ic.EN_UVLO
-
-    en_vdiv.r_top.value = "499k"
-    en_vdiv.r_bottom.value = "84.5k"
-    en_vdiv.r_top.fooprint = "R0402"
-    en_vdiv.r_bottom.fooprint = "R0402"
-
-module BulkCap from Capacitor:
-    footprint = "C1206"
-    value = "2.2uF"
-
-module LEDChannelUV from LEDChannelBuckBoost:
-    # fill me
-    # specific pn in mind
-    # shunt.mpn = ""
-    # shunt.footprint = "R0805"
-
-    # we can currently do this (for some parts)
-    # shunt.value = 0.750
-    # shunt.fooprint = "R1206"
-
-    # future
-    # equation to sovle for value
-
-    # todays implementation - replace these with specifc parts (generaic ->(replaced with) specific)
-    inductor -> FTC252012S100MBCA
-    shunt -> RS_06FL7__0R56 #TODO find a REAL shunt
-    diode -> PMEG6010CEH_115
-    # pfets optional skipping it # pfet -> #TODO find a pfet # JLC C3280135 
-    bulk_input_cap1 -> BulkCap
-    bulk_input_cap2 -> BulkCap
-    bulk_output_cap1 -> BulkCap
-    bulk_output_cap2 -> BulkCap
-    # specify values of these
-
-    # connecting a string of 4 LEDs to LED interface. 
-    whiteled1 = new KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF
-    whiteled2 = new KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF
-    whiteled3 = new KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF
-    whiteled4 = new KW_H3L531_TE_Z7Q6_EBVFFCBB46_DFYF
-     
-    whiteled1.anode ~ led_interface.anode
-    whiteled1.cathode ~ whiteled2.anode
-    whiteled2.cathode ~ whiteled3.anode
-    whiteled3.cathode ~ whiteled4.anode
-    whiteled4.cathode ~ led_interface.cathode
-    
-
-    # #hacky bits: TODO remove this
-    # shunt.footprint = "R0805"
-    # shunt.value = "1k"
-    # # pfet.footprint = "R0402"
-    # diode.footprint = "R0402"
-
-    fbdiv.r_top.value = "10k"
-    fbdiv.r_top.fooprint = "R0402"
-    fbdiv.r_bottom.value = "10k"
-    fbdiv.r_bottom.fooprint = "R0402"
-
-module LEDChannelBuckBoost:
-    # interface
-    channel_interface = new LEDChannelInterface
-    led_interface = new LEDInterface
-
-    # components
-    shunt = new Resistor
-    # pfet = new PFET
-    # Top Gate Driver Output. Connect to gate of external PMOS pass transistor. TG is an inverted and level-shifted version of the PWM dimming signal, and drives between VISP (OFF) and VISP– 8.2V (ON) for LED PWM dimming as well as fault mode disconnect. Leave unconnected if not used.
-
-    fbdiv = new VDiv
-    diode = new ShottkyDiode
-    inductor = new Inductor
-    bulk_input_cap1 = new Capacitor
-    bulk_input_cap2 = new Capacitor
-    bulk_output_cap1 = new Capacitor
-    bulk_output_cap2 = new Capacitor
-
-    # connections to interface
-
-    # current sense resistor
-    channel_interface.current_sense_p ~ shunt.p1
-    channel_interface.current_sense_n ~ shunt.p2
-
-    # feedback divider
-    channel_interface.feedback ~ fbdiv.out
-    channel_interface.gnd ~ fbdiv.bottom
-
-    # mosfet
-    # channel_interface.mosfet_gate ~ pfet.gate
-    # channel_interface.mosfet_gate # ~ floating #this probably breaks something
-
-    # connections to other components
-    # inductor
-    inductor.p1 ~ channel_interface.switching_node
-    inductor.p2 ~ channel_interface.vcc
-
-    # bulk caps
-    bulk_input_cap1.p1 ~ channel_interface.vcc
-    bulk_input_cap1.p2 ~ channel_interface.gnd
-
-    bulk_input_cap2.p1 ~ channel_interface.vcc
-    bulk_input_cap2.p2 ~ channel_interface.gnd
-
-    # diode
-    diode.anode ~ channel_interface.switching_node
-
-    # output caps
-    diode.cathode ~ bulk_output_cap1.p1
-    diode.cathode ~ bulk_output_cap2.p1
-    bulk_output_cap1.p2 ~ channel_interface.gnd
-    bulk_output_cap2.p2 ~ channel_interface.gnd
-
-    # shunt
-    diode.cathode ~ shunt.p1
-
-    # pfet skipping not needed
-    # shunt.p2 ~ pfet.source
-    # pfet.drain ~ led_interface.anode
-    shunt.p2 ~ led_interface.anode
-    led_interface.cathode ~ channel_interface.gnd
-
-
-interface LEDChannelInterface:
-    signal switching_node
-    signal current_sense_n
-    signal current_sense_p
-    signal feedback
-    signal mosfet_gate
-    signal vcc
-    signal gnd
-
-component _LT3966EUJPBF:
-    # component LT3966EUJ#PBF
-    footprint = "QFN-40_L6.0-W6.0-P0.50-BL-EP4.5"
-    lcsc_id = "C1020309"
-    mpn = "C1020309"
-    # pins
-    signal GND ~ pin 41
-    signal ISN1 ~ pin 40
-    signal FB1 ~ pin 39
-    signal VIN ~ pin 38
-    signal INTVCC ~ pin 37
-    signal EN_UVLO ~ pin 36
-    signal EXT2 ~ pin 35
-    signal SYNC ~ pin 34
-    signal RT ~ pin 33
-    signal FB2 ~ pin 32
-    signal ISN2 ~ pin 31
-    signal ISP2 ~ pin 30
-    signal TG2 ~ pin 29
-    signal SW2 ~ pin 28
-    SW2 ~ pin 27
-    signal SW4 ~ pin 26
-    SW4 ~ pin 25
-    signal TG4 ~ pin 24
-    signal ISP4 ~ pin 23
-    signal ISN4 ~ pin 22
-    signal FB4 ~ pin 21
-    signal ALERT_ ~ pin 20
-    signal SCL ~ pin 19
-    signal SDA ~ pin 18
-    signal ADR2 ~ pin 17
-    signal ADR1 ~ pin 16
-    signal EXT1 ~ pin 15
-    signal CTRL_PWM4 ~ pin 14
-    signal CTRL_PWM3 ~ pin 13
-    signal CTRL_PWM2 ~ pin 12
-    signal CTRL_PWM1 ~ pin 11
-    signal FB3 ~ pin 10
-    signal ISN3 ~ pin 9
-    signal ISP3 ~ pin 8
-    signal TG3 ~ pin 7
-    signal SW3 ~ pin 6
-    SW3 ~ pin 5
-    signal SW1 ~ pin 4
-    SW1 ~ pin 3
-    signal TG1 ~ pin 2
-    signal ISP1 ~ pin 1
+    led_driver.i2c ~ micro.i2c
 
